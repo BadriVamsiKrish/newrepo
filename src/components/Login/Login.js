@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Card from '../UI/Card/Card';
 import classes from './Login.module.css';
@@ -9,35 +9,50 @@ const Login = (props) => {
   const [emailIsValid, setEmailIsValid] = useState();
   const [enteredPassword, setEnteredPassword] = useState('');
   const [passwordIsValid, setPasswordIsValid] = useState();
+  const [enteredClgName,setEnteredClgName]= useState('');
+  const [clgNameIsValid,setClgNameIsValid]= useState();
   const [formIsValid, setFormIsValid] = useState(false);
+
+  useEffect(()=>{
+    const identifier = setTimeout(() => {
+      console.log("check validity");
+      setFormIsValid(
+        enteredEmail.includes('@') && enteredPassword.trim().length > 6 && enteredClgName.trim().length > 0
+      );
+    },500);
+   return () =>{
+    console.log("clean up");
+    clearTimeout(identifier);
+   }
+  },[enteredEmail,enteredPassword,enteredClgName]);
 
   const emailChangeHandler = (event) => {
     setEnteredEmail(event.target.value);
-
-    setFormIsValid(
-      event.target.value.includes('@') && enteredPassword.trim().length > 6
-    );
   };
 
   const passwordChangeHandler = (event) => {
     setEnteredPassword(event.target.value);
-
-    setFormIsValid(
-      event.target.value.trim().length > 6 && enteredEmail.includes('@')
-    );
+    // setFormIsValid(
+    //   event.target.value.trim().length > 6 && enteredEmail.includes('@')
+    // );
   };
+  const clgNameChangeHandler = (event) =>{
+    setEnteredClgName(event.target.value);
+  }
 
   const validateEmailHandler = () => {
     setEmailIsValid(enteredEmail.includes('@'));
   };
-
   const validatePasswordHandler = () => {
     setPasswordIsValid(enteredPassword.trim().length > 6);
   };
+  const validateClgNameHandler = () =>{
+    setClgNameIsValid(enteredClgName.trim().length > 0);
+  }
 
   const submitHandler = (event) => {
     event.preventDefault();
-    props.onLogin(enteredEmail, enteredPassword);
+    props.onLogin(enteredEmail, enteredPassword,enteredClgName);
   };
 
   return (
@@ -69,6 +84,20 @@ const Login = (props) => {
             value={enteredPassword}
             onChange={passwordChangeHandler}
             onBlur={validatePasswordHandler}
+          />
+        </div>
+        <div 
+         className={`${classes.control} ${
+          clgNameIsValid === false ? classes.invalid : ''
+        }`}
+        >
+          <label htmlFor='v=clg'>College Name</label>
+          <input 
+          type='text' 
+          id='clgName'
+          value={enteredClgName}
+          onChange={clgNameChangeHandler}
+          onBlur={validateClgNameHandler}
           />
         </div>
         <div className={classes.actions}>
