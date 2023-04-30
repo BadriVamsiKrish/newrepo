@@ -79,7 +79,14 @@ const App = () => {
               </select>
               <input type="submit" value="Add" name="Add"/>
             </form>
-            <TodoList todolist={todos} deleteHandler={deleteHandler}/>
+            <>
+                <div>
+                    {todolist.map((todo,index) =>
+                    <div key={index}>
+                        <h5>{todo} &nbsp; <button onClick={() => deleteHandler(index)}>Delete</button></h5>
+                        </div>)}
+                </div>
+          </>
           </div>
         </div>
       </center>
